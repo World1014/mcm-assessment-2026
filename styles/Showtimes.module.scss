@@ -1,0 +1,113 @@
+.showtimesContainer {
+    max-width: 440px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background: #faf8f4;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    flex: none;
+    padding: 6px 22px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.date {
+    font-size: 13px;
+    color: #8a8378;
+
+}
+
+.body {
+    flex: 1;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.movieTitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.05;
+    margin: 0;
+}
+
+.selectTime {
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8a8378;
+}
+
+.showtime {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ded8cd;;
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: #fff;
+}
+
+.showtimeTime {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    display: block;
+
+}
+
+.notes {
+    font-size: 12px;
+    color: #8a8378;
+}
+
+.button {
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #b4541f;;
+    color: #fff;
+}
+
+.button.disable {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+
+.theater {
+ 
+    display: flex;
+    flex-direction: column;
+}
+.availability {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: #8a8378;
+}
