@@ -1,9 +1,9 @@
 'use client';
 import { useRouter } from "next/navigation";
 import styles from '../styles/PaymentConfirmation.module.scss';
-import { Movie as MovieType, ShowTime as showtimeType } from "@/typescript/movieData";
+import { Movie as MovieType, PaymentSearchParams, ShowTime as showtimeType } from "@/typescript/movieData";
 
-export default function PaymentPage({movie, showtime, stackParams} : {movie: MovieType, showtime: showtimeType, stackParams: any }) {
+export default function PaymentPage({movie, showtime, stackParams} : {movie: MovieType, showtime: showtimeType, stackParams: PaymentSearchParams }) {
     const router = useRouter();
 
     const handleSelect = () => {

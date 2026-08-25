@@ -65,8 +65,10 @@ export default function Showtimes({props}: {props: Theater[]}) {
                                     {/* TODO (task 2): fire a GA4 dataLayer push from this CTA with at
                                         least two parameters, and console.log the exact payload. */}
                                     <button
+                                      type="button"
                                       className={`${styles.button}`}
                                       data-testid="showtime-cta"
+                                      aria-label={`Buy tickets for ${movie.title} at ${showtime.showtime}`}
                                       onClick={() => handleSelect(theater.id, movie.id, showtime.id)}
                                     >
                                         Buy
