@@ -18,6 +18,9 @@
     style.id = styleId;
     style.textContent = [
       '[data-task4-sold-out="true"] {',
+      '  box-sizing: border-box !important;',
+      '  width: 92px !important;',
+      '  height: 48px !important;',
       '  background: #dedede !important;',
       '  color: #777 !important;',
       '  cursor: not-allowed !important;',
@@ -59,6 +62,8 @@
 
   function loadModules(index, onError) {
     if (index === modulePaths.length) {
+      window.__mcmTask4Loading = false;
+      window.__mcmTask4Installed = true;
       window.MCMTask4.installNavigation(scheduleUpdate);
       scheduleUpdate();
       return;

@@ -18,6 +18,10 @@
       }
 
       if (isSoldOut) {
+        if (button.getAttribute('data-task4-sold-out') !== 'true') {
+          button.setAttribute('data-task4-original-html', button.innerHTML);
+          button.setAttribute('data-task4-original-label', button.getAttribute('aria-label') || '');
+        }
         button.disabled = true;
         button.setAttribute('aria-disabled', 'true');
         button.setAttribute('aria-label', 'Sold out');
@@ -26,9 +30,16 @@
       } else if (button.getAttribute('data-task4-sold-out') === 'true') {
         button.disabled = false;
         button.removeAttribute('aria-disabled');
-        button.removeAttribute('aria-label');
+        button.innerHTML = button.getAttribute('data-task4-original-html') || 'Buy';
+        var originalLabel = button.getAttribute('data-task4-original-label');
+        if (originalLabel) {
+          button.setAttribute('aria-label', originalLabel);
+        } else {
+          button.removeAttribute('aria-label');
+        }
         button.removeAttribute('data-task4-sold-out');
-        button.textContent = 'Buy';
+        button.removeAttribute('data-task4-original-html');
+        button.removeAttribute('data-task4-original-label');
       }
     });
   };

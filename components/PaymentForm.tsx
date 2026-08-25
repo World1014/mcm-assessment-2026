@@ -42,7 +42,7 @@ export default function PaymentForm({ props }: PaymentFormProps) {
 
     const handleSelect = () => {
         router.push(
-          `/tickets?theaterId=${theaterId}&movieId=${movieId}&showtimeId=${showtimeId}`
+          `/tickets?theaterId=${theaterId}&theaterName=${encodeURIComponent(getSearchParamValue(props.theaterName))}&movieId=${movieId}&showtimeId=${showtimeId}`
         );
       };
       
@@ -60,18 +60,18 @@ export default function PaymentForm({ props }: PaymentFormProps) {
         <form onSubmit={handleSubmit} className={styles.form}>
 
             <div className={styles.field}>
-                <label>First Name</label>
-                <input name="firstName" required placeholder="John" />
+                <label htmlFor="first-name">First Name</label>
+                <input id="first-name" name="firstName" autoComplete="given-name" required placeholder="John" />
             </div>
 
             <div className={styles.field}>
-                <label>Last Name</label>
-                <input name="lastName" required placeholder="Doe" />
+                <label htmlFor="last-name">Last Name</label>
+                <input id="last-name" name="lastName" autoComplete="family-name" required placeholder="Doe" />
             </div>
 
             <div className={styles.field}>
-                <label>Card Number</label>
-                <input name="cardNumber" required placeholder="1234 5678 9012 3456" />
+                <label htmlFor="card-number">Card Number</label>
+                <input id="card-number" name="cardNumber" type="text" inputMode="numeric" autoComplete="cc-number" required placeholder="1234 5678 9012 3456" />
             </div>
             <div className={styles.note}>Any values are accepted — no real payment is processed.</div>
 

@@ -28,15 +28,30 @@
       }
 
       if (available === 0) {
+        if (button.getAttribute('data-task4-soldout-type') !== 'true') {
+          button.setAttribute('data-task4-original-html', button.innerHTML);
+        }
         button.disabled = true;
         button.setAttribute('aria-disabled', 'true');
         button.setAttribute('aria-label', type.label + ' tickets sold out');
         button.setAttribute('data-task4-soldout-type', 'true');
         button.textContent = 'Sold out';
+        button.removeAttribute('aria-expanded');
+        button.removeAttribute('aria-controls');
         if (list) {
           list.remove();
         }
         return;
+      }
+
+      if (button.getAttribute('data-task4-soldout-type') === 'true') {
+        button.disabled = false;
+        button.removeAttribute('aria-disabled');
+        button.innerHTML = button.getAttribute('data-task4-original-html') || '0';
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-controls', type.listTestId.replace('dropdown-list', 'ticket-options'));
+        button.removeAttribute('data-task4-soldout-type');
+        button.removeAttribute('data-task4-original-html');
       }
 
       if (list) {
