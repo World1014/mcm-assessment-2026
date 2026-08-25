@@ -5,6 +5,7 @@ import { Movie, SelectedShowtimeQueryData, ShowTime, TicketSelectionSearchParams
 export default async function Tickets({searchParams}: {searchParams: Promise<TicketSelectionSearchParams>}) {
     const stackParams = await searchParams;
     const theaterId = Number(stackParams.theaterId);
+    const theaterName = Array.isArray(stackParams.theaterName) ? stackParams.theaterName[0] || '' : stackParams.theaterName || '';
     const movieId = Number(stackParams.movieId);
     const showtimeId = Number(stackParams.showtimeId);
     
@@ -57,6 +58,6 @@ export default async function Tickets({searchParams}: {searchParams: Promise<Tic
 
   
     return (<div>
-       <TicketSelector showtime={showtime} movie={movie} theaterId={theaterId} />
+    <TicketSelector showtime={showtime} movie={movie} theaterId={theaterId} theaterName={theaterName} />
     </div>)
 };

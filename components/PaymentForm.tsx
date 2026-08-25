@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import type { SubmitEvent } from "react";
 import { PaymentSearchParams } from "@/typescript/movieData";
+import { AnalyticsEvent, getSearchParamValue, pushAnalyticsEvent } from "@/lib/analytics";
 import styles from '../styles/PaymentForm.module.scss';
 
 type PaymentFormProps = {
@@ -24,9 +25,18 @@ export default function PaymentForm({ props }: PaymentFormProps) {
         e.preventDefault();
 
         const orderId = Math.floor(Math.random() * 1000000);
+        const totalValue = Number(getSearchParamValue(totalAmt));
+
+        pushAnalyticsEvent({
+            event: AnalyticsEvent.AddPaymentInfo,
+            ecommerce: {
+                currency: 'USD',
+                value: totalValue,
+            },
+        });
     
         router.push(
-          `/payment-confirmation?orderId=${orderId}&theaterId=${theaterId}&movieId=${movieId}&showtimeId=${showtimeId}&adult=${adult}&children=${children}&totalAmt=${totalAmt}`
+          `/payment-confirmation?orderId=${orderId}&theaterId=${theaterId}&theaterName=${encodeURIComponent(getSearchParamValue(props.theaterName))}&movieId=${movieId}&showtimeId=${showtimeId}&adult=${adult}&children=${children}&totalAmt=${totalAmt}`
         );
       };
 

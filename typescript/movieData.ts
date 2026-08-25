@@ -55,6 +55,7 @@ export type SearchParamValue = string | string[] | undefined;
 
 export interface BookingSearchParams {
     theaterId?: SearchParamValue;
+    theaterName?: SearchParamValue;
     movieId?: SearchParamValue;
     showtimeId?: SearchParamValue;
 }

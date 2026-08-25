@@ -6,7 +6,7 @@ The home route was only querying theater IDs and names, while the ticket and con
 
 ## Task 2: GA4 measurement
 
-Not implemented yet. The planned approach is to push GA4-recommended ecommerce events to `dataLayer`, including route-aware page views, showtime browsing, Buy selection, ticket quantity selection, checkout/payment steps, and a purchase event containing the movie, showtime, theater, ticket quantities, currency, and total value. Purchase deduplication should use a stable transaction ID and browser storage because the confirmation page can be revisited.
+Implemented with a typed `dataLayer` helper and a client route tracker that pushes `page_view` on client-side pathname changes. The funnel now pushes `view_item_list`, `select_item`, ticket quantity events, `begin_checkout`, `add_payment_info`, and `purchase`. Ecommerce payloads use USD currency and include totals, ticket quantities, movie, showtime, and theater context. Because the app has a deliberately small, known event vocabulary, an enum and discriminated payload union are used instead of an open-ended `unknown` property map. Route/list effects are guarded against React development re-runs, checkout starts are protected from rapid duplicate clicks, and purchase events use the order ID plus `localStorage` to avoid firing again on refresh or back navigation. The supplied dataLayer logger remains unchanged.
 
 ## Task 3: Google Tag Manager container
 
@@ -16,6 +16,12 @@ Not implemented yet. The next step is to create a GTM web container, replace the
 
 Not implemented yet. The planned approach is a GTM Custom HTML tag loading an external script from `public/gtm/task-4.js`. The script will use the stable `data-testid` and `data-*` attributes, observe client-side navigation and React re-renders, mark unavailable showtimes as sold out, cap ticket options by availability, and replace zero-availability ticket selectors with non-interactive sold-out states. This will remain post-render DOM manipulation, as required, rather than changing the React components.
 
+## Additional improvements
+
+The UI was also improved beyond the explicit integration requirements. The custom ticket selectors now expose listbox and option semantics, support keyboard selection, announce expanded state, provide contextual accessible names, and associate the availability information and validation alert with the relevant controls. A single prominent alert identifies whether adult, children, or both selections exceed availability and tells the user how to correct it. Visible focus styles were added to interactive controls, and muted text colors were darkened for better contrast on mobile. Buttons were given explicit types and the payment Back button no longer submits the form accidentally. These changes preserve the README requirement that availability-based quantity capping and sold-out states remain a GTM task.
+
+The analytics implementation also adds a typed shared helper, a reusable ticket-item builder, and route-aware page tracking through a client component. Quantity selections use a dedicated event so they can be analyzed independently of the GA4 ecommerce events, and theater names are carried through the existing query-string navigation so purchase items have useful category data.
+
 ## Validation
 
-Task 1 passed workspace diagnostics, ESLint, and the Next.js production build. Live navigation and GTM/GA4 verification are still required when the remaining integrations are implemented.
+Task 1 and task 2 passed workspace diagnostics, ESLint, and the Next.js production build. Live navigation, browser accessibility checks, and GTM/GA4 verification are still required, especially after the remaining GTM container and availability script work is implemented.

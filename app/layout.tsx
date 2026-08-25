@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Inter_Tight } from "next/font/google";
 import Script from "next/script";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 import "./globals.css";
 
 
@@ -71,7 +72,7 @@ const DATALAYER_LOGGER = `
 // TODO (task 3): replace this with your own GTM container ID.
 // Create a free container at https://tagmanager.google.com, then confirm it
 // loads using GTM Preview mode.
-const GTM_ID = "GTM-XXXXXXX";
+const GTM_ID = "GTM-M5XQB24W";
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -100,6 +101,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        <AnalyticsTracker />
         {children}
       </body>
     </html>

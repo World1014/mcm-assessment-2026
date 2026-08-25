@@ -1,8 +1,9 @@
 'use client';
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { ShowTime, Movie } from "@/typescript/movieData";
+import { AnalyticsEvent, getTicketItems, pushAnalyticsEvent } from "@/lib/analytics";
 import styles from '../styles/TicketSelector.module.scss';
 
 type CheckoutRoute = 'continue' | 'back';
@@ -14,7 +15,7 @@ enum TicketType {
 
 type TicketTypeValue = `${TicketType}`;
 
-export default function TicketSelector({showtime, movie, theaterId}: {showtime: ShowTime, movie: Movie, theaterId: number}) {
+export default function TicketSelector({showtime, movie, theaterId, theaterName}: {showtime: ShowTime, movie: Movie, theaterId: number, theaterName: string}) {
     const router = useRouter();
 
     // Local UI state for dropdowns and ticket totals
@@ -25,12 +26,35 @@ export default function TicketSelector({showtime, movie, theaterId}: {showtime: 
     const [childrenIsOpen, setChildrenIsOpen] = useState(false);
     const [childrenTotalAmt, setChildrenTotalAmt] = useState(0);
     const [total, setTotal] = useState(0);
+    const hasStartedCheckout = useRef(false);
 
     // Navigate forward to payment page or back to home
     const handleSelect = (route: CheckoutRoute) => {
         if (route === 'continue') {
+            if (hasExceededAvailability || (adultCount === 0 && childrenCount === 0) || hasStartedCheckout.current) {
+                return;
+            }
+
+            hasStartedCheckout.current = true;
+
+            pushAnalyticsEvent({
+                event: AnalyticsEvent.BeginCheckout,
+                ecommerce: {
+                    currency: 'USD',
+                    value: total,
+                    items: getTicketItems({
+                        movieTitle: movie.title,
+                        showtime: showtime.showtime,
+                        theaterName,
+                        adultPrice: Number(showtime.adult_price),
+                        adultQuantity: adultCount,
+                        childrenPrice: Number(showtime.children_price),
+                        childrenQuantity: childrenCount,
+                    }),
+                },
+            });
             router.push(
-                `/payment-information?theaterId=${theaterId}&movieId=${movie.id}&showtimeId=${showtime.id}&adult=${adultCount}&children=${childrenCount}&totalAmt=${total}`
+                `/payment-information?theaterId=${theaterId}&theaterName=${encodeURIComponent(theaterName)}&movieId=${movie.id}&showtimeId=${showtime.id}&adult=${adultCount}&children=${childrenCount}&totalAmt=${total}`
               );
         } else {
             router.push(`/`);
@@ -40,6 +64,7 @@ export default function TicketSelector({showtime, movie, theaterId}: {showtime: 
 
     // Handle selecting adult ticket quantity
     const handleAdultOptionClick = (option:number) => {
+        pushAnalyticsEvent({ event: AnalyticsEvent.TicketQuantitySelected, ticket_type: TicketType.Adult, quantity: option });
         setAdultCount(option);
         setAdultIsOpen(false);
         totalAmtForEach(option, TicketType.Adult)
@@ -47,6 +72,7 @@ export default function TicketSelector({showtime, movie, theaterId}: {showtime: 
 
     // Handle selecting children ticket quantity
     const handleChildrenOptionClick = (option:number) => {
+        pushAnalyticsEvent({ event: AnalyticsEvent.TicketQuantitySelected, ticket_type: TicketType.Children, quantity: option });
         setChildrenCount(option);
         setChildrenIsOpen(false);
         totalAmtForEach(option, TicketType.Children);
