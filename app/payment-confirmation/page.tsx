@@ -1,6 +1,11 @@
 import { fetchGraphQL } from "@/lib/graphql";
 import PaymentPage from "@/components/PaymentPage";
 import { Movie, PaymentSearchParams, SelectedShowtimeQueryData, ShowTime } from "@/typescript/movieData";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Payment Confirmation",
+};
 
 export default async function PaymentConfirmation({searchParams}: {searchParams: Promise<PaymentSearchParams>}) {
     const stackParams = await searchParams;

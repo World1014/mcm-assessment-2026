@@ -18,7 +18,7 @@ type TicketTypeValue = `${TicketType}`;
 export default function TicketSelector({showtime, movie, theaterId, theaterName}: {showtime: ShowTime, movie: Movie, theaterId: number, theaterName: string}) {
     const router = useRouter();
 
-    // Local UI state for dropdowns and ticket totals
+    // Local UI states for dropdowns and ticket totals
     const [adultCount, setAdultCount] = useState(0);
     const [adultIsOpen, setAdultIsOpen] = useState(false);
     const [adultTotalAmt, setAdultTotalAmt] = useState(0);
