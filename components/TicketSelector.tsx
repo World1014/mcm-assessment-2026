@@ -238,7 +238,7 @@ export default function TicketSelector({showtime, movie, theaterId, theaterName}
                       type="button"
                       onClick={() => handleSelect('continue')}
                       aria-disabled={hasExceededAvailability || (adultCount === 0 && childrenCount === 0)}
-                      className={`${styles.continueButton} ${(childrenCount > Number(showtime.children_available) || adultCount > Number(showtime.adult_available) || (adultCount == 0 && childrenCount == 0) ? styles.disable : '' )} `}>
+                      className={`${styles.continueButton} ${(hasExceededAvailability || (adultCount === 0 && childrenCount === 0) ? styles.disable : '' )} `}>
                         Continue
                     </button>
                     

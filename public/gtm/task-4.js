@@ -59,6 +59,8 @@
 
   function loadModules(index, onError) {
     if (index === modulePaths.length) {
+      window.__mcmTask4Loading = false;
+      window.__mcmTask4Installed = true;
       window.MCMTask4.installNavigation(scheduleUpdate);
       scheduleUpdate();
       return;
