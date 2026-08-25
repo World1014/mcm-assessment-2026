@@ -22,6 +22,8 @@ The UI was also improved beyond the explicit integration requirements. The custo
 
 The analytics implementation also adds a typed shared helper, a reusable ticket-item builder, and route-aware page tracking through a client component. Quantity selections use a dedicated event so they can be analyzed independently of the GA4 ecommerce events, and theater names are carried through the existing query-string navigation so purchase items have useful category data.
 
+The showtimes date is formatted once in the server route and passed into the client component. This avoids a hydration mismatch caused by formatting `new Date()` independently on the server and browser, particularly around timezone or midnight boundaries.
+
 ## Validation
 
 Task 1 and task 2 passed workspace diagnostics, ESLint, and the Next.js production build. The task 4 script passed syntax validation and direct browser behavior checks. Live navigation through the GTM container, browser accessibility checks, and GTM/GA4 verification are still required on the deployed site.

@@ -6,17 +6,9 @@ import { AnalyticsEvent, getShowtimeItems, pushAnalyticsEvent } from "@/lib/anal
 import styles from '../styles/Showtimes.module.scss';
 
 
-export default function Showtimes({props}: {props: Theater[]}) {
+export default function Showtimes({props, formattedDate}: {props: Theater[], formattedDate: string}) {
     const router = useRouter();
     const hasTrackedShowtimeList = useRef(false);
-    const date = new Date();
-
-    // Format today's date for the "Now showing" header
-    const formattedDate = new Intl.DateTimeFormat('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long'
-    }).format(date);
 
     // Navigate to the ticket page using selected theater/movie/showtime
     const handleSelect = (theaterId:number, movieId:number, showtimeId:number) => {

@@ -40,6 +40,11 @@ const GET_THEATER_DATA = `
 export default async function Home() {
 
   const data = await fetchGraphQL<TheaterQueryData>(GET_THEATER_DATA);
+  const formattedDate = new Intl.DateTimeFormat('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(new Date());
 
   const theaters: Theater[] = data.theatersCollection.edges.map(({ node: theater }) => ({
     id: Number(theater.id),
@@ -58,7 +63,7 @@ export default async function Home() {
   return (
     <div className="w-full">
       <main>
-        <Showtimes props={theaters} /> 
+        <Showtimes props={theaters} formattedDate={formattedDate} />
       </main>
     </div>
   );
