@@ -10,11 +10,11 @@ Implemented with a typed `dataLayer` helper and a client route tracker that push
 
 ## Task 3: Google Tag Manager container
 
-Not implemented yet. The next step is to create a GTM web container, replace the placeholder container ID in `app/layout.tsx`, and verify the container in GTM Preview mode. The supplied dataLayer logger will remain unchanged.
+The GTM web container ID is configured in `app/layout.tsx`. Local browser verification confirms that the container script loads and emits `gtm.js`; Tag Assistant Preview could not connect reliably to localhost, so final Preview verification should be completed against the deployed URL. The supplied dataLayer logger remains unchanged.
 
 ## Task 4: GTM-driven availability UI
 
-Not implemented yet. The planned approach is a GTM Custom HTML tag loading an external script from `public/gtm/task-4.js`. The script will use the stable `data-testid` and `data-*` attributes, observe client-side navigation and React re-renders, mark unavailable showtimes as sold out, cap ticket options by availability, and replace zero-availability ticket selectors with non-interactive sold-out states. This will remain post-render DOM manipulation, as required, rather than changing the React components.
+The post-render integration is split into three focused browser scripts: `task-4-showtimes.js`, `task-4-ticket-types.js`, and `task-4-navigation.js`, loaded and coordinated by `public/gtm/task-4.js` through a single GTM Custom HTML tag. The modules use stable `data-testid` and `data-*` attributes, observe client-side navigation and React re-renders, mark unavailable showtimes as sold out, cap ticket options by availability, and replace zero-availability ticket selectors with non-interactive sold-out states. They remain independent of CSS module class names. Direct browser testing confirmed the split modules load, sold-out home buttons work, a `0-10` adult option range appears for ten available tickets, a `0-4` range appears for four available tickets, and a zero-availability children selector becomes disabled. GTM tag configuration, Preview verification, and deployed-site testing remain outstanding.
 
 ## Additional improvements
 
@@ -24,4 +24,4 @@ The analytics implementation also adds a typed shared helper, a reusable ticket-
 
 ## Validation
 
-Task 1 and task 2 passed workspace diagnostics, ESLint, and the Next.js production build. Live navigation, browser accessibility checks, and GTM/GA4 verification are still required, especially after the remaining GTM container and availability script work is implemented.
+Task 1 and task 2 passed workspace diagnostics, ESLint, and the Next.js production build. The task 4 script passed syntax validation and direct browser behavior checks. Live navigation through the GTM container, browser accessibility checks, and GTM/GA4 verification are still required on the deployed site.
