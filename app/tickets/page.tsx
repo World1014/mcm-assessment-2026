@@ -1,6 +1,11 @@
 import { fetchGraphQL } from "@/lib/graphql";
 import TicketSelector from "@/components/TicketSelector";
 import { Movie, SelectedShowtimeQueryData, ShowTime, TicketSelectionSearchParams } from "@/typescript/movieData";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Tickets",
+};
 
 export default async function Tickets({searchParams}: {searchParams: Promise<TicketSelectionSearchParams>}) {
     const stackParams = await searchParams;
