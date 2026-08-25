@@ -34,7 +34,7 @@ export default function PaymentPage({movie, showtime, stackParams} : {movie: Mov
 
     return(<div className={styles.paymentPageContainer}>
         <div className={styles.check}>✓</div>
-        <div>
+        <div className={styles.heading}>
            <div className={styles.title}>Purchase complete</div>
             <div className={styles.subTitle}>Your tickets are confirmed. Show this screen at the door.</div> 
         </div>

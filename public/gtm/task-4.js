@@ -18,6 +18,9 @@
     style.id = styleId;
     style.textContent = [
       '[data-task4-sold-out="true"] {',
+      '  box-sizing: border-box !important;',
+      '  width: 92px !important;',
+      '  height: 48px !important;',
       '  background: #dedede !important;',
       '  color: #777 !important;',
       '  cursor: not-allowed !important;',
