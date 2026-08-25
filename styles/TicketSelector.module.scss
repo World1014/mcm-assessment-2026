@@ -18,7 +18,7 @@
 
 .headerSub {
     font-size: 13px;
-    color: #8a8378;
+    color: #6b6258;
 }
 
 .title {
@@ -84,7 +84,7 @@
 
 .price {
   font-size: 13px;
-  color: #8a8378;
+  color: #6b6258;
 }
   
   .dropdownButton {
@@ -98,6 +98,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .dropdownButton:focus-visible,
+  .dropdownList:focus-visible,
+  .continueButton:focus-visible,
+  .backButton:focus-visible {
+    outline: 3px solid #1f5f8b;
+    outline-offset: 2px;
   }
   
   .arrow {
@@ -135,6 +143,11 @@
   
   .dropdownList:hover {
     background-color: #f0f0f0;
+  }
+
+  .dropdownList[aria-selected="true"] {
+    background-color: #f3e2d8;
+    font-weight: 600;
   }
 
   .buttons {
@@ -177,10 +190,16 @@
   }
 
   .error {
-    color: red;
+    padding: 10px 12px;
+    border: 1px solid #a8320e;
+    border-radius: 8px;
+    background: #fff1eb;
+    color: #8b260b;
+    font-size: 14px;
+    font-weight: 600;
   }
 
 .available {
   font-size: 12px;
-  color: #8a8378;
+  color: #6b6258;
 }

@@ -1,46 +1,63 @@
 import { fetchGraphQL } from "@/lib/graphql";
 import TicketSelector from "@/components/TicketSelector";
+import { Movie, SelectedShowtimeQueryData, ShowTime, TicketSelectionSearchParams } from "@/typescript/movieData";
 
-export default async function Tickets({searchParams}: {searchParams: any}) {
+export default async function Tickets({searchParams}: {searchParams: Promise<TicketSelectionSearchParams>}) {
     const stackParams = await searchParams;
     const theaterId = Number(stackParams.theaterId);
+    const theaterName = Array.isArray(stackParams.theaterName) ? stackParams.theaterName[0] || '' : stackParams.theaterName || '';
     const movieId = Number(stackParams.movieId);
     const showtimeId = Number(stackParams.showtimeId);
     
-    //TODO (task 1): Expand this query to fetch the full movie + showtime data.
-    //You will need to filter by each movieId and showtimeId, then delete the
-    //placeholder showtime object below.
     const query = `
-        query GetSelectedShowtime($movieId: BigInt!) {
+        query GetSelectedShowtime($movieId: BigInt!, $showtimeId: BigInt!) {
             moviesCollection(filter: { id: { eq: $movieId } }) {
                     edges {
                         node {
                         id
                         title
+                        showtimesCollection(filter: { id: { eq: $showtimeId } }) {
+                            edges {
+                                node {
+                                    id
+                                    showtime
+                                    adult_available
+                                    children_available
+                                    adult_price
+                                    children_price
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     `;
 
-    const data = await fetchGraphQL(query, {movieId, showtimeId});
-    const movie =  data.moviesCollection.edges.map((edge:any) => ({
-        ...edge.node,
-    }))[0];
-  
-      // Temporary placeholder
-      // Replace this with the real 'showtime' variable from your GraphQL query
-      const showtime = {
-          id: 0,
-          showtime: "N/A",
-          adult_available: 0,
-          children_available: 0,
-          adult_price: 0,
-          children_price: 0
-      };
+    const data = await fetchGraphQL<SelectedShowtimeQueryData>(query, {movieId, showtimeId});
+    const selectedMovie = data.moviesCollection.edges[0]?.node;
+    if (!selectedMovie) {
+        throw new Error("Selected movie was not found");
+    }
+    const selectedShowtime = selectedMovie.showtimesCollection.edges[0]?.node;
+    if (!selectedShowtime) {
+        throw new Error("Selected showtime was not found");
+    }
+    const movie: Movie = {
+        id: Number(selectedMovie.id),
+        title: selectedMovie.title,
+        showtimes: [{
+            ...selectedShowtime,
+            id: Number(selectedShowtime.id),
+        }],
+    };
+    const showtime: ShowTime = {
+        ...selectedShowtime,
+        id: Number(selectedShowtime.id),
+    };
 
   
     return (<div>
-       <TicketSelector showtime={showtime} movie={movie} theaterId={theaterId} />
+    <TicketSelector showtime={showtime} movie={movie} theaterId={theaterId} theaterName={theaterName} />
     </div>)
 };

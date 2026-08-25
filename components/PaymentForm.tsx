@@ -1,33 +1,42 @@
 'use client';
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import type { SubmitEvent } from "react";
+import { PaymentSearchParams } from "@/typescript/movieData";
+import { AnalyticsEvent, getSearchParamValue, pushAnalyticsEvent } from "@/lib/analytics";
 import styles from '../styles/PaymentForm.module.scss';
 
-export default function PaymentForm(props:any) {
+type PaymentFormProps = {
+    props: PaymentSearchParams;
+};
+
+export default function PaymentForm({ props }: PaymentFormProps) {
     const router = useRouter();
 
     // Values passed from the ticket selection page
     // These determine what the user is paying for
-    const { theaterId, movieId, showtimeId, adult, children, totalAmt } = props.props;
+    const { theaterId, movieId, showtimeId, adult, children, totalAmt } = props;
 
     // Basic totals for display only
-    let total = Number(adult) + Number(children);
-    let totalAmount = Number(totalAmt);
+    const total = Number(adult) + Number(children);
+    const totalAmount = Number(totalAmt);
 
      // Handle form submission and navigate to confirmation page
-    const handleSubmit = (e:any) => {
+    const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-    
-        const formData = new FormData(e.currentTarget);
-    
-        const firstName = formData.get("firstName");
-        const lastName = formData.get("lastName");
-        const cardNumber = formData.get("cardNumber");
-    
+
         const orderId = Math.floor(Math.random() * 1000000);
+        const totalValue = Number(getSearchParamValue(totalAmt));
+
+        pushAnalyticsEvent({
+            event: AnalyticsEvent.AddPaymentInfo,
+            ecommerce: {
+                currency: 'USD',
+                value: totalValue,
+            },
+        });
     
         router.push(
-          `/payment-confirmation?orderId=${orderId}&theaterId=${theaterId}&movieId=${movieId}&showtimeId=${showtimeId}&adult=${adult}&children=${children}&totalAmt=${totalAmt}`
+          `/payment-confirmation?orderId=${orderId}&theaterId=${theaterId}&theaterName=${encodeURIComponent(getSearchParamValue(props.theaterName))}&movieId=${movieId}&showtimeId=${showtimeId}&adult=${adult}&children=${children}&totalAmt=${totalAmt}`
         );
       };
 
@@ -68,7 +77,7 @@ export default function PaymentForm(props:any) {
 
             <div className={styles.action}>
                 <button type="submit" className={styles.submit}> Complete </button>
-                <button onClick={() => handleSelect()} className={styles.backButton}>Back</button>  
+                <button type="button" onClick={handleSelect} className={styles.backButton}>Back</button>
             </div>
             
         </form>

@@ -1,9 +1,7 @@
 import { fetchGraphQL } from "@/lib/graphql";
-import { Theater } from "@/typescript/movieData";
+import { Theater, TheaterQueryData } from "@/typescript/movieData";
 import Showtimes from "@/components/Showtimes";
 
-//TODO (task 1): Expand this query to fetch the full theater, movie, and showtime
-//data, then replace the mapping below so movies and showtimes are actually populated.
 const GET_THEATER_DATA = `
   query {
     theatersCollection {
@@ -11,6 +9,26 @@ const GET_THEATER_DATA = `
         node {
           id
           name
+          moviesCollection {
+            edges {
+              node {
+                id
+                title
+                showtimesCollection {
+                  edges {
+                    node {
+                      id
+                      showtime
+                      adult_available
+                      children_available
+                      adult_price
+                      children_price
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -21,14 +39,19 @@ const GET_THEATER_DATA = `
 
 export default async function Home() {
 
-  const data = await fetchGraphQL(GET_THEATER_DATA);
+  const data = await fetchGraphQL<TheaterQueryData>(GET_THEATER_DATA);
 
-  // Transform the top-level collection into a Theater[] shape
-  // NOTE: this only includes basic theater info - you will need to expand the query and
-  // build out the full nested structure (movie -> showtimes) for the final implementation
-  const theaters: Theater[] = data.theatersCollection.edges.map((edge:any) => ({
-      ...edge.node,
-      movies: []
+  const theaters: Theater[] = data.theatersCollection.edges.map(({ node: theater }) => ({
+    id: Number(theater.id),
+    name: theater.name,
+    movies: theater.moviesCollection.edges.map(({ node: movie }) => ({
+      id: Number(movie.id),
+      title: movie.title,
+      showtimes: movie.showtimesCollection.edges.map(({ node: showtime }) => ({
+        ...showtime,
+        id: Number(showtime.id),
+      })),
+    })),
   }));
 
   

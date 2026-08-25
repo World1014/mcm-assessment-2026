@@ -1,11 +1,14 @@
 'use client';
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { Theater } from "@/typescript/movieData";
+import { AnalyticsEvent, getShowtimeItems, pushAnalyticsEvent } from "@/lib/analytics";
 import styles from '../styles/Showtimes.module.scss';
 
 
 export default function Showtimes({props}: {props: Theater[]}) {
     const router = useRouter();
+    const hasTrackedShowtimeList = useRef(false);
     const date = new Date();
 
     // Format today's date for the "Now showing" header
@@ -17,8 +20,46 @@ export default function Showtimes({props}: {props: Theater[]}) {
 
     // Navigate to the ticket page using selected theater/movie/showtime
     const handleSelect = (theaterId:number, movieId:number, showtimeId:number) => {
-      router.push(`/tickets?theaterId=${theaterId}&movieId=${movieId}&showtimeId=${showtimeId}`);
+            const theater = props.find((item) => item.id === theaterId);
+            const movie = theater?.movies.find((item) => item.id === movieId);
+            const showtime = movie?.showtimes.find((item) => item.id === showtimeId);
+
+            if (!theater || !movie || !showtime) {
+                return;
+            }
+
+            pushAnalyticsEvent({
+                event: AnalyticsEvent.SelectItem,
+                ecommerce: {
+                    item_list_name: 'Showtimes',
+                    items: [{
+                        item_id: String(showtime.id),
+                        item_name: movie.title,
+                        item_variant: showtime.showtime,
+                        item_category: theater.name,
+                        price: Number(showtime.adult_price),
+                        quantity: 1,
+                    }],
+                },
+            });
+
+            router.push(`/tickets?theaterId=${theaterId}&theaterName=${encodeURIComponent(theater.name)}&movieId=${movieId}&showtimeId=${showtimeId}`);
     };
+
+        useEffect(() => {
+            if (hasTrackedShowtimeList.current) {
+                return;
+            }
+
+            hasTrackedShowtimeList.current = true;
+            pushAnalyticsEvent({
+                event: AnalyticsEvent.ViewItemList,
+                ecommerce: {
+                    item_list_name: 'Showtimes',
+                    items: getShowtimeItems(props),
+                },
+            });
+        }, [props]);
 
 
     return (<div className={styles.showtimesContainer}>
@@ -65,8 +106,10 @@ export default function Showtimes({props}: {props: Theater[]}) {
                                     {/* TODO (task 2): fire a GA4 dataLayer push from this CTA with at
                                         least two parameters, and console.log the exact payload. */}
                                     <button
+                                      type="button"
                                       className={`${styles.button}`}
                                       data-testid="showtime-cta"
+                                      aria-label={`Buy tickets for ${movie.title} at ${showtime.showtime}`}
                                       onClick={() => handleSelect(theater.id, movie.id, showtime.id)}
                                     >
                                         Buy

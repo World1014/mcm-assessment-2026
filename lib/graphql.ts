@@ -1,7 +1,7 @@
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export async function fetchGraphQL(query: string, variables = {}) {
+export async function fetchGraphQL<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
         throw new Error("Missing Supabase environment variables");
     };
@@ -23,5 +23,5 @@ export async function fetchGraphQL(query: string, variables = {}) {
         throw new Error('Failed to fetch GraphQL API');
     };
 
-    return json.data;
+    return json.data as T;
 } 
