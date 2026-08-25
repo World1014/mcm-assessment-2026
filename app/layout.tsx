@@ -69,9 +69,6 @@ const DATALAYER_LOGGER = `
 })();
 `;
 
-// TODO (task 3): replace this with your own GTM container ID.
-// Create a free container at https://tagmanager.google.com, then confirm it
-// loads using GTM Preview mode.
 const GTM_ID = "GTM-M5XQB24W";
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

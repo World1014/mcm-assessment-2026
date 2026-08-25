@@ -48,34 +48,39 @@
     window.requestAnimationFrame(applyAvailabilityChanges);
   }
 
-  function loadModule(path, onLoad) {
+  function loadModule(path, onLoad, onError) {
     var script = document.createElement('script');
     script.src = path;
     script.async = false;
     script.onload = onLoad;
+    script.onerror = onError;
     document.head.appendChild(script);
   }
 
-  function loadModules(index) {
+  function loadModules(index, onError) {
     if (index === modulePaths.length) {
       window.MCMTask4.installNavigation(scheduleUpdate);
       scheduleUpdate();
       return;
     }
 
-    loadModule(modulePaths[index], function () {
-      loadModules(index + 1);
-    });
+    loadModule(
+      modulePaths[index],
+      function () { loadModules(index + 1, onError); },
+      onError
+    );
   }
 
   function install() {
-    if (window.__mcmTask4Installed) {
+    if (window.__mcmTask4Loading || window.__mcmTask4Installed) {
       return;
     }
 
-    window.__mcmTask4Installed = true;
+    window.__mcmTask4Loading = true;
     window.MCMTask4 = window.MCMTask4 || {};
-    loadModules(0);
+    loadModules(0, function () {
+      window.__mcmTask4Loading = false;
+    });
   }
 
   if (document.body) {
