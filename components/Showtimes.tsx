@@ -75,16 +75,6 @@ export default function Showtimes({props}: {props: Theater[]}) {
                         <div className={styles.movieTitle} data-testid="movie-title">{movie.title}</div>
                         <div className={styles.stack}>
                             <div className={styles.selectTime}>Select a showtime</div>
-                            {/*
-                              TODO (task 4): reflect sold-out state on this button from a GTM
-                              tag, not from this component.
-
-                              Availability is exposed both as visible text and as data-*
-                              attributes so it can be read after render. Note that the Buy
-                              button below is always enabled and always reads "Buy" --
-                              reflecting sold-out state is task 4, and belongs in a GTM tag,
-                              not in this component.
-                            */}
                             {movie.showtimes.map((showtime, showtimeIndex) => (
                                 <div
                                   className={styles.showtime}
@@ -103,8 +93,6 @@ export default function Showtimes({props}: {props: Theater[]}) {
                                             Child ${showtime.children_price} ({showtime.children_available} left)
                                         </span>
                                     </div>
-                                    {/* TODO (task 2): fire a GA4 dataLayer push from this CTA with at
-                                        least two parameters, and console.log the exact payload. */}
                                     <button
                                       type="button"
                                       className={`${styles.button}`}

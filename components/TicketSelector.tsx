@@ -125,16 +125,6 @@ export default function TicketSelector({showtime, movie, theaterId, theaterName}
            
             <hr className={styles.hr}></hr>
             <div className={styles.body}>
-                {/*
-                  TODO (task 4): cap these options and replace a sold-out dropdown from a
-                  GTM tag, not from this component.
-
-                  Both dropdowns below intentionally render a fixed 0-20 range and are
-                  always interactive, even when zero seats are available. Capping the
-                  options and replacing a sold-out dropdown is task 4, and must be done
-                  post-render from a GTM tag rather than here. Availability is published
-                  on the data-available attributes and as visible text.
-                */}
                 {hasExceededAvailability && (
                     <div className={styles.error} id="ticket-selection-error" role="alert">
                         {availabilityError} Please reduce your selection to continue.
